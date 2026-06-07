@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>X Topics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      transition: transform 0.2s ease;
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.75rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 4px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1.1rem;
+      color: #fff;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.05);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>X Topics</h1>
+    </header>
+
+    <div class="prompt-workflow">
+      <!-- Prompt #1 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #1</span></div>
+        <div class="prompt-content" id="p1">meaning crisis</div>
+        <button class="copy-btn" onclick="copyText('p1', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #2</span></div>
+        <div class="prompt-content" id="p2">human flourishing</div>
+        <button class="copy-btn" onclick="copyText('p2', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #3</span></div>
+        <div class="prompt-content" id="p3">wisdom</div>
+        <button class="copy-btn" onclick="copyText('p3', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #4</span></div>
+        <div class="prompt-content" id="p4">virtue</div>
+        <button class="copy-btn" onclick="copyText('p4', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #5</span></div>
+        <div class="prompt-content" id="p5">character</div>
+        <button class="copy-btn" onclick="copyText('p5', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #6 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #6</span></div>
+        <div class="prompt-content" id="p6">mortality</div>
+        <button class="copy-btn" onclick="copyText('p6', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #7 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #7</span></div>
+        <div class="prompt-content" id="p7">purpose</div>
+        <button class="copy-btn" onclick="copyText('p7', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #8 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #8</span></div>
+        <div class="prompt-content" id="p8">fulfillment</div>
+        <button class="copy-btn" onclick="copyText('p8', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #9 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #9</span></div>
+        <div class="prompt-content" id="p9">self knowledge</div>
+        <button class="copy-btn" onclick="copyText('p9', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #10 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #10</span></div>
+        <div class="prompt-content" id="p10">existential risk</div>
+        <button class="copy-btn" onclick="copyText('p10', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #11 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #11</span></div>
+        <div class="prompt-content" id="p11">good life</div>
+        <button class="copy-btn" onclick="copyText('p11', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #12 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #12</span></div>
+        <div class="prompt-content" id="p12">human nature</div>
+        <button class="copy-btn" onclick="copyText('p12', this)">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt #13 -->
+      <div class="step-card" style="margin-bottom: 40px;">
+        <div class="step-header"><span class="step-label">Prompt #13</span></div>
+        <div class="prompt-content" id="p13">intellectual humility</div>
+        <button class="copy-btn" onclick="copyText('p13', this)">Copy Prompt</button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span>Copied!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
