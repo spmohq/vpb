@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text → Core Belief, Core Thesis & Message Extractor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .sub-header {
+      color: var(--accent-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      letter-spacing: 0.08em;
+    }
+
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 180px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.85rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 4px 14px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 850px) {
+      h1 { font-size: 1.6rem; }
+      .sub-header { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Text → Core Belief, Core Thesis & Core Message Extractor</h1>
+      <p class="sub-header">Analyzes any piece of content to uncover the author's underlying worldview, core belief, central thesis, core message, assumptions, values, and deeper intellectual foundation.</p>
+    </header>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Paste Text Here</label>
+        <textarea id="val1" oninput="updatePrompts()" placeholder="Enter article, essay, transcript, or any other written material..."></textarea>
+      </div>
+    </div>
+
+    <div class="prompt-workflow">
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Intellectual Extraction Prompt</span>
+        </div>
+        <div class="prompt-content" id="p1_out"></div>
+        <button class="copy-btn" onclick="copyText('p1_out', this)">
+          <span>Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function updatePrompts() {
+      const text = document.getElementById('val1').value || "[PASTE TEXT HERE]";
+
+      const prompt = `Act as a world-class intellectual analyst, philosopher, writer, editor, and idea strategist.
+
+I will provide a piece of text. The text may be:
+
+- An article
+- Essay
+- Blog post
+- Newsletter
+- Book excerpt
+- Speech
+- Interview
+- Social media post
+- PDF content
+- Notes
+- Research summary
+- Transcript
+- Any other written material
+
+Your task is NOT to summarize the text.
+
+Instead, identify the deepest underlying ideas, beliefs, assumptions, and messages hidden beneath the surface.
+
+INPUT:
+
+${text}
+
+ANALYSIS FRAMEWORK
+
+1. Surface Topic
+
+What is the text explicitly about?
+
+Provide a concise answer.
+
+---
+
+2. Central Question
+
+What question is this text ultimately trying to answer?
+
+Examples:
+
+- What makes a good life?
+- Why do people suffer?
+- How should society function?
+- What creates success?
+- How do humans find meaning?
+
+State the single most important question.
+
+---
+
+3. Core Belief
+
+Identify the deepest belief that appears to drive the author's thinking.
+
+Complete this sentence:
+
+"The author appears to believe that..."
+
+Write this as a single clear statement.
+
+Do NOT simply paraphrase the text.
+
+Infer the underlying belief.
+
+---
+
+4. Core Thesis
+
+Reduce the entire text into one powerful thesis statement.
+
+If the text were expanded into a book, what would be its central argument?
+
+Write one concise thesis.
+
+---
+
+5. Core Message
+
+If the author could leave the audience with only ONE message, what would it be?
+
+Write:
+
+"The core message is:"
+
+Then provide the message in one sentence.
+
+---
+
+6. First-Principles Insight
+
+What fundamental truth about life, people, society, relationships, learning, work, meaning, or human nature is the text pointing toward?
+
+Extract the deepest insight.
+
+---
+
+7. Hidden Assumptions
+
+What assumptions must be true for the author's argument to work?
+
+List 3–7 assumptions.
+
+---
+
+8. Values Hierarchy
+
+What values does the text appear to prioritize?
+
+Rank the top values from most important to least important.
+
+Examples:
+
+- Truth
+- Freedom
+- Wisdom
+- Love
+- Family
+- Community
+- Growth
+- Responsibility
+- Excellence
+- Justice
+- Compassion
+- Meaning
+
+---
+
+9. Intellectual Lineage
+
+Which thinkers, philosophers, traditions, schools of thought, religions, ideologies, or intellectual movements would most likely agree with this text?
+
+Explain why.
+
+---
+
+10. Opposing View
+
+What would a thoughtful critic say?
+
+Present the strongest possible opposing perspective.
+
+Do not create a strawman.
+
+---
+
+11. One-Sentence Philosophy
+
+Compress the entire text into a single memorable sentence.
+
+The sentence should feel like a timeless principle or life philosophy.
+
+---
+
+12. Intellectual Ecosystem Potential
+
+Assume the author wants to build a long-term body of work around this idea.
+
+Identify:
+
+- Core Belief
+- Core Thesis
+- Core Message
+- 5 Related Themes
+- 10 Future Topics the author could explore
+
+---
+
+IMPORTANT RULES
+
+- Do not summarize the text section by section.
+- Focus on ideas, not wording.
+- Extract the deepest layer of meaning.
+- Look beneath examples, stories, and arguments.
+- Separate what the author says from what the author believes.
+- Distinguish between:
+  - Topic
+  - Thesis
+  - Belief
+  - Message
+- Prefer depth over breadth.
+- Think like a philosopher, intellectual historian, and idea strategist.
+- Treat the text as evidence from which you must infer the worldview underneath.`;
+
+      document.getElementById('p1_out').innerText = prompt;
+    }
+
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span>Copied to Clipboard!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Initial setup
+    updatePrompts();
+  </script>
+</body>
+</html>
