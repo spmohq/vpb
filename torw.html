@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Translate & Rewrite Prompt</title>
+  <link rel="icon" href="spm.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #1f2937;
+      --bg-gradient-end: #111827;
+      --card-bg: rgba(31, 41, 55, 0.5);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-heading: #ffffff;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #34d399;
+      --input-bg: #111827;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { font-size: 2.2rem; font-weight: 700; color: var(--text-heading); letter-spacing: -1px; text-transform: uppercase; }
+    
+    /* Input Section */
+    .input-section {
+      margin-bottom: 40px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+    }
+    .input-group { display: flex; flex-direction: column; }
+    .input-group label { font-weight: 600; margin-bottom: 10px; color: var(--accent-primary); font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 15px;
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    textarea:focus { outline: 2px solid var(--accent-primary); border-color: transparent; }
+
+    /* Prompt Cards */
+    .prompts-container { display: flex; flex-direction: column; gap: 40px; }
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 32px 0 var(--shadow-color);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(12px);
+    }
+    .prompt-card h2 { font-size: 0.9rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .prompt-text {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.9rem;
+      border: 1px solid var(--card-border);
+      margin-bottom: 15px;
+      line-height: 1.5;
+      color: #e5e7eb;
+    }
+    .dynamic-val { 
+        color: var(--accent-primary); 
+        font-weight: 600; 
+        background: rgba(34, 211, 238, 0.1);
+        padding: 0 2px;
+    }
+
+    .copy-button {
+      align-self: flex-end;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--accent-primary);
+      color: var(--bg-gradient-end);
+      border: none; border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .copy-button:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .copy-button.copied { background: var(--accent-success); }
+    .icon { width: 16px; height: 16px; }
+
+    footer { text-align: center; margin-top: 50px; color: var(--text-secondary); font-size: 0.85rem; padding-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Translate & Rewrite Prompt</h1>
+  </header>
+
+  <!-- Input Area -->
+  <section class="input-section">
+    <div class="input-group">
+      <label>Insert Sentence(s) to process:</label>
+      <textarea id="sentenceInput" placeholder="Enter the text you want to translate or rewrite..."></textarea>
+    </div>
+  </section>
+
+  <main class="prompts-container">
+    
+    <!-- Prompt 1 -->
+    <div class="prompt-card">
+      <h2>Prompt #1: Kolkata English Translation</h2>
+      <div id="p1" class="prompt-text">Translate the following sentence(s) in modern, natural, everyday conversational English as spoken in Kolkata, West Bengal, India — but without local slang, regional grammar, or phrasing that could confuse a global audience. It must be bold, direct and easily understood by a 21-year-old.
+
+Strict Rule:
+Must subtly reflect Kolkata conversational cadence through sentence rhythm and phrasing by using slightly formal, polite, and smoothly flowing sentence structures, with balanced pacing and no abrupt or overly casual wording — without slang, regional grammar, or loss of conservative authority.
+
+Sentence(s):
+<span class="dynamic-val" data-field="sentences">[Sentence(s)]</span></div>
+      <button class="copy-button" data-target="p1"><span class="btn-text">Copy Prompt 1</span></button>
+    </div>
+
+    <!-- Prompt 2 -->
+    <div class="prompt-card">
+      <h2>Prompt #2: Kolkata English Rewrite</h2>
+      <div id="p2" class="prompt-text">Rewrite the following sentence(s) in modern, natural, everyday conversational English as spoken in Kolkata, West Bengal, India — but without local slang, regional grammar, or phrasing that could confuse a global audience. It must be bold, direct and easily understood by a 21-year-old.
+
+Strict Rule:
+Must subtly reflect Kolkata conversational cadence through sentence rhythm and phrasing by using slightly formal, polite, and smoothly flowing sentence structures, with balanced pacing and no abrupt or overly casual wording — without slang, regional grammar, or loss of conservative authority.
+
+Sentence(s):
+<span class="dynamic-val" data-field="sentences">[Sentence(s)]</span></div>
+      <button class="copy-button" data-target="p2"><span class="btn-text">Copy Prompt 2</span></button>
+    </div>
+
+    <!-- Prompt 3 -->
+    <div class="prompt-card">
+      <h2>Prompt #3: Kolkata Bengali Translation</h2>
+      <div id="p3" class="prompt-text">Please translate it, as much word by word as possible, in the most spontaneous and natural sounding modern, everyday conversational Bengali as spoken in Kolkata, West Bengal, India that can be understood by an 21 year old but contains the international standards of language.
+
+Strict Rules:
+Must subtly reflect Kolkata conversational cadence through sentence rhythm and phrasing by using slightly formal, polite, and smoothly flowing sentence structures, with balanced pacing and no abrupt or overly casual wording — without slang, regional grammar, or loss of conservative authority.
+
+• Always use the formal “আপনি”, not the informal “তুমি.” The address is formal, but the tone should remain warm, conversational, and approachable.
+• The voice should be bold, direct, also should feel like a close friend and a trusted authority, speaking one-on-one with the reader in a natural, face-to-face style.
+
+Here's the text to translate:
+
+<span class="dynamic-val" data-field="sentences">[Sentence(s)]</span></div>
+      <button class="copy-button" data-target="p3"><span class="btn-text">Copy Prompt 3</span></button>
+    </div>
+
+    <!-- Prompt 4 -->
+    <div class="prompt-card">
+      <h2>Prompt #4: Kolkata Bengali Rewrite</h2>
+      <div id="p4" class="prompt-text">Please rewrite it, as much word by word as possible, in the most spontaneous and natural sounding modern, everyday conversational Bengali as spoken in Kolkata, West Bengal, India that can be understood by an 21 year old but contains the international standards of language.
+
+Strict Rules:
+Must subtly reflect Kolkata conversational cadence through sentence rhythm and phrasing by using slightly formal, polite, and smoothly flowing sentence structures, with balanced pacing and no abrupt or overly casual wording — without slang, regional grammar, or loss of conservative authority.
+
+• Always use the formal “আপনি”, not the informal “তুমি.” The address is formal, but the tone should remain warm, conversational, and approachable.
+• The voice should be bold, direct, also should feel like a close friend and a trusted authority, speaking one-on-one with the reader in a natural, face-to-face style.
+
+Here's the text to translate:
+
+<span class="dynamic-val" data-field="sentences">[Sentence(s)]</span></div>
+      <button class="copy-button" data-target="p4"><span class="btn-text">Copy Prompt 4</span></button>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+  </footer>
+</div>
+
+<script>
+  // Dynamic replacement logic
+  const sentenceInput = document.getElementById('sentenceInput');
+
+  sentenceInput.addEventListener('input', () => {
+    const val = sentenceInput.value.trim() || '[Sentence(s)]';
+    document.querySelectorAll('.dynamic-val[data-field="sentences"]').forEach(el => {
+      el.textContent = val;
+    });
+  });
+
+  // Copy functionality
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const targetId = button.getAttribute('data-target');
+      const textToCopy = document.getElementById(targetId).innerText;
+      const btnText = button.querySelector('.btn-text');
+      const originalText = btnText.textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        btnText.textContent = 'Copied!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          btnText.textContent = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
